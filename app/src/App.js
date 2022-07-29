@@ -7,27 +7,19 @@ const TWITTER_HANDLE = '_buildspace';
 const TWITTER_LINK = `https://twitter.com/${TWITTER_HANDLE}`;
 
 const App = () => {
-  // Actions
-
-  /*
-  * Declare your function
-  */
   const checkIfWalletIsConnected = async () => {
     try {
       const { solana } = window;
 
-      if (solana && solana.isPhantom) {
+      if (solana) {
+        if (solana.isPhantom) {
           console.log('Phantom wallet found!');
-
-          /*
-           * The solana object gives us a function that will allow us to connect
-           * directly with the user's wallet!
-           */
           const response = await solana.connect({ onlyIfTrusted: true });
           console.log(
             'Connected with Public Key:',
             response.publicKey.toString()
           );
+        }
       } else {
         alert('Solana object not found! Get a Phantom Wallet 👻');
       }
@@ -37,9 +29,24 @@ const App = () => {
   };
 
   /*
-   * When our component first mounts, let's check to see if we have a connected
-   * Phantom Wallet
+   * Let's define this method so our code doesn't break.
+   * We will write the logic for this next!
    */
+  const connectWallet = async () => {};
+
+  /*
+   * We want to render this UI when the user hasn't connected
+   * their wallet to our app yet.
+   */
+  const renderNotConnectedContainer = () => (
+    <button
+      className="cta-button connect-wallet-button"
+      onClick={connectWallet}
+    >
+      Connect to Wallet
+    </button>
+  );
+
   useEffect(() => {
     const onLoad = async () => {
       await checkIfWalletIsConnected();
@@ -54,6 +61,8 @@ const App = () => {
         <div className="header-container">
           <p className="header">🍭 Candy Drop</p>
           <p className="sub-text">NFT drop machine with fair mint</p>
+          {/* Render your connect to wallet button right here */}
+          {renderNotConnectedContainer()}
         </div>
         <div className="footer-container">
           <img alt="Twitter Logo" className="twitter-logo" src={twitterLogo} />
